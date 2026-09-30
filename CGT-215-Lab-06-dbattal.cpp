@@ -27,7 +27,7 @@ int main() {
     // taking green screen color from the corner of the foreground
     // setting the range for the color of the pixel. basically how close the pixel's color needs to be to the green screen's value to count
     Color screenColor = foregroundImage.getPixel(0, 0);
-    int range = 80; 
+    int range = 50; 
 
     Vector2u sz = backgroundImage.getSize();
     for (int y = 0; y < sz.y; y++) {
