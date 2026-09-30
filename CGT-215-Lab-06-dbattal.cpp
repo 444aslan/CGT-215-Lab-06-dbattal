@@ -1,33 +1,49 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
+
 using namespace sf;
 using namespace std;
+
 int main() {
 	string background = "images1/backgrounds/winter.png";
 	string foreground = "images1/characters/yoda.png";
+
 	Texture backgroundTex;
 	if (!backgroundTex.loadFromFile(background)) {
 		cout << "Couldn't Load Image" << endl;
 		exit(1);
 	}
+
 	Texture foregroundTex;
 	if (!foregroundTex.loadFromFile(foreground)) {
 		cout << "Couldn't Load Image" << endl;
 		exit(1);
 	}
+
 	Image backgroundImage;
 	backgroundImage = backgroundTex.copyToImage();
 	Image foregroundImage;
 	foregroundImage = foregroundTex.copyToImage();
+
+	Color screenColor = foregroundImage.getPixel(0,0);
+	int tolerance = 30;
+
 	Vector2u sz = backgroundImage.getSize();
 	for (int y = 0; y < sz.y; y++) {
 		for (int x = 0; x < sz.x; x++) {
-			// These two loops will run the code inside for each pixel in the background image
-				// You can access the current pixel at x,y like so:
-				Color example = foregroundImage.getPixel(x, y);
-			// Color objects store the individual channel values like example.r example.g and example.b
+			Color fgC = foregroundImage.getPixel(x, y);
+
+			int diffR = abs(fgC.r - screenColor.r);
+			int diffG = abs(fgC.g - screenColor.g);
+			int diffB = abs(fgC.b - screenColor.b);
+
+			if (diffR < tolerance && diffG < tolerance && diffB < tolerance) {
+				Color bgC = backgroundImage.getPixel(x, y);
+				foregroundImage.setPixel(x, y, bgC);
+			}
 		}
 	}
+
 	// By default, just show the foreground image
 	RenderWindow window(VideoMode(1024, 768), "Here's the output");
 	Sprite sprite1;
